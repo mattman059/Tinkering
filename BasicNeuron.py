@@ -1,3 +1,5 @@
+#https://victorzhou.com/blog/intro-to-neural-networks/
+
 import numpy as np
 
 def sigmoid(x):
