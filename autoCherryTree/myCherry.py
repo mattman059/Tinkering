@@ -1,4 +1,4 @@
-mport subprocess
+import subprocess
 DEBUG = False
 def main():
     fh = open("/root/Desktop/myNotes.ctd",'w')
