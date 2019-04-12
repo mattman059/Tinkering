@@ -1,15 +1,14 @@
-import subprocess
-
+mport subprocess
+DEBUG = False
 def main():
     fh = open("/root/Desktop/myNotes.ctd",'w')
 
     #DEBUG
-    targets = "10.1.1.1-90"
+    targets = "10.1.1.1-70"
     #DEBUG
     
     header(fh)
     pingScan(fh,targets)
-    #serviceScan(fh)
     #Enum(fh)
     footer(fh)
     fh.close()
@@ -29,16 +28,31 @@ def pingScan(handle, targets):
     #Create a new page for each live host
     for curIP in liveHosts:
         handle.write("<node custom_icon_id='0' is_bold='False' name='" + curIP + "' prog_lang='custom-colors' >\n")
+        #tcp scan
+        handle.write("<node custom_icon_id='0' is_bold='False' name='TCP Service Scan' prog_lang='custom-colors'>\n")
+        handle.write("<rich_text>\n")
+        SCAN = "nmap -sC -sV -vvv %s" % (curIP)
+        print("[SCAN] " + SCAN)
+        SCAN_result = subprocess.check_output(SCAN, shell=True)
+        SCAN_lines = str(results).encode("utf-8").split("\n")
+        if DEBUG :
+            print(" NMAP COMMAND ")
+            print("[DEBUG] " + SCAN)
+            print(" NMAP RESULT ")
+            print("[DEBUG] " + str(SCAN_result))
+            print(" NMAP LIST RESULT")
+            print("[DEBUG] " + str(SCAN_lines))
+        handle.write(SCAN_result)
+        handle.write("</rich_text>\n")
         handle.write("</node>\n")
-
-
+        handle.write("</node>\n")
+        
     handle.write("</node>\n")
-
 
 
 def footer(handle):
     handle.write("</cherrytree>\n")
-    
+
     
 
 main()
