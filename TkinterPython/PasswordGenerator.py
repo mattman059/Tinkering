@@ -1,6 +1,6 @@
 import math
 import string
-import secrets
+import secrets #requires Python 3.6
 import random
 import tkinter as tk
 
