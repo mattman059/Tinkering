@@ -52,4 +52,7 @@ i -> 7 = 1       2^0
 Equivalent
     netmask[math.floor(i/8)] = netmask[math.floor(i/8)] + (1 << (7 - i % 8))
     netmask[math.floor(i/8)] = netmask[math.floor(i/8)] + (math.pow(2,(7-61%8))) # Requires math library
+    
+    (i//8) -> Integer Division, takes floor
+    math.floor(i/8) Floating point division, uses math library to take floor # Requires math library
 '''
