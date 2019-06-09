@@ -54,5 +54,5 @@ Equivalent
     netmask[math.floor(i/8)] = netmask[math.floor(i/8)] + (math.pow(2,(7-61%8))) # Requires math library
     
     (i//8) -> Integer Division, takes floor
-    math.floor(i/8) Floating point division, uses math library to take floor # Requires math library
+    math.floor(i/8) -> Floating point division, uses math library to take floor # Requires math library
 '''
