@@ -11,6 +11,9 @@ form = b'''
             <br />
             <input type=checkbox name="name" id="name" value="Bob">Bob<br />
             <input type=checkbox name="name" id="name" value="Steve">Steve<br />
+            <input type=checkbox name="name" id="name" value="Larry">Larry<br />
+            <input type=checkbox name="name" id="name" value="Curly">Curly<br />
+            <input type=checkbox name="name" id="name" value="Moe">Moe<br />
             <input type="submit" value="Go">
         </form>
     </body>
