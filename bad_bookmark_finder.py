@@ -10,6 +10,7 @@ import threading
 import time
 import requests
 import sys
+import math
 
 exitFlag = 0
 URL_SCAN_LIST = "URLs.txt"
@@ -22,10 +23,9 @@ class myThread (threading.Thread):
       self.name = name
       self.q = q
    def run(self):
-      print("Starting " + self.name + "\n")
+      #print("Starting " + self.name + "\n")
       process_data(self.name, self.q)
-      #print("Exiting " + self.name + "\n")
-
+      
 def process_data(threadName, q):
    while not exitFlag:
       queueLock.acquire()
@@ -33,18 +33,18 @@ def process_data(threadName, q):
       if not workQueue.empty():
             data = q.get()
             queueLock.release()
-            process_URL(data)
+            process_URL(threadName,data)
       else:
          queueLock.release()
          time.sleep(1)
 
-def process_URL(url):
+def process_URL(threadName,url):
     try:
         r = requests.get(url.strip())
         if r.status_code != 200:
-            print(str(r.status_code) + ": " + url)
+            print(threadName + " - " + str(r.status_code) + ": " + url + "\n")
     except:
-        print("[*]: " + url.strip())
+        print(threadName + " - [*]: " + url.strip())
         pass
 
 def process_bookmarks():
@@ -67,7 +67,6 @@ def process_bookmarks():
     fh_out.close()
 
 
-threadList = ["Thread-1", "Thread-2", "Thread-3", "Thread-4", "Thread-5", "Thread-6", "Thread-7", "Thread-8", "Thread-9", "Thread-10"]
 
 ######################################
 #### Build nameList from URL file ####
@@ -86,6 +85,13 @@ except:
     except:
         print("Something bad happened")
         sys.exit(0)
+
+threadNumber = math.floor(len(nameList) * .05)
+print("NUMBER OF THREADS: " + str(threadNumber))
+threadList = []
+for i in range(threadNumber):
+    threadList.append("Thread-" + str(i))
+
 ######################################
     
 queueLock = threading.Lock()
