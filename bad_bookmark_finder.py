@@ -23,7 +23,6 @@ class myThread (threading.Thread):
       self.name = name
       self.q = q
    def run(self):
-      #print("Starting " + self.name + "\n")
       process_data(self.name, self.q)
       
 def process_data(threadName, q):
