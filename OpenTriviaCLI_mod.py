@@ -5,7 +5,7 @@ import html
 import random
 import time
 import sys
-
+import argparse
 #### URLS ####
 get_token_url = 'https://opentdb.com/api_token.php?command=request'
 base_url = 'https://opentdb.com/api.php?'
@@ -77,8 +77,9 @@ def ask_questions(questions):
     question_amount = len(questions['results'])
     right_answers = 0
     wrong_answers = 0
+    percent_correct = 0
     for question in questions['results']:
-        print_logo()
+        #print_logo()
         run = True
         counter = 1
         drawn_answers = 0
@@ -116,9 +117,11 @@ def ask_questions(questions):
                 print(f'You had {right_answers}/{right_answers + wrong_answers} answer(s) right ({round((100 / (right_answers + wrong_answers) * right_answers), 2)})%')
                 time.sleep(2.5)
 
-    print_logo()
-    print("Attempt #",count_attempts)
-    print(f'You had {right_answers}/{right_answers + wrong_answers} answer(s) right ({round((100 / (right_answers + wrong_answers) * right_answers), 2)})%')
+    #print_logo()
+    try:
+        print(f'You had {right_answers}/{right_answers + wrong_answers} answer(s) right ({round((100 / (right_answers + wrong_answers) * right_answers), 2)})%')
+    except ZeroDivisionError:
+        pass
     if percent_correct >= 80:
         
         print("YOU WIN!")
@@ -136,70 +139,10 @@ def print_categorys(): # Print all available categorys
     for category in categorys.json()['trivia_categories']:
         print(f"{category['name']} | {category['id']}, ")
 
-def new_questions():
+def new_questions(question_type,difficulty,category):
     run = True
-    ''' How many questions
-    print("How many questions do you want to get asked? (Default: 10)")
-    amount = input(">> ")
-    if amount == "":
-        amount = 10
-    try:
-        amount = int(amount)
-    except:
-        print('Pls specify an integer for ammount')
-    try: 
-        if amount < 1 or amount > 50: 
-             print('Pls specify amount between 1 to 50')
-             run = False
-
-    except:
-        run = False
-    
-    # Which category
     if run:
-        category =9 #General Knowledge
-        
-        print("In which category do you want to get asked? (Default: all)")
-        category = input(">> ")
-        if category != "":
-            try:
-                category = int(category)
-            except:
-                print('Pls specify an integer for category (check: "?")')
-                run = False
-  
-    
-    # Which type
-    if run:
-        question_type='boolean'
-
-        print("Which type of questions do you want to get asked? (boolean, multiple, Default: mixed)")
-        question_type = input(">> ")
-        if question_type != "":
-            question_type = question_type.lower()
-            if question_type not in ['boolean', 'multiple']:
-                print('Use "boolean" or "multiple" for question type')
-                run = False
-
-    
-    # Which difficulty 
-    if run:
-        difficulty = 'easy'
-        
-        print("Which difficulty should the questions are? (easy, medium, hard, Default: mixed)")
-        difficulty = input(">> ")
-        if difficulty != "":
-            difficulty = difficulty.lower()
-            if difficulty not in ['easy', 'medium', 'hard']:
-                print('Please choice a "easy", "medium" or "hard"')
-                run = False
-'''    
-
-
-
-    if run:
-        #questions = get_questions(amount=amount, type=question_type, category=category, difficulty=difficulty)
-        questions = get_questions(amount=amount, type='boolean', category=9, difficulty='easy')
+        questions = get_questions(amount=amount, type=question_type, category=category, difficulty=difficulty)
         if questions != None:
             ask_questions(questions)
         else:
@@ -227,7 +170,12 @@ def user_input_handler(user_input):
 # Main loop
 intro()
 while run:
-    user_input = input('>> ')
-    if user_input.lower() in ['q','exit', 'quit']:
-        run = False
-    user_input_handler(user_input)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--type', type=str)
+    parser.add_argument('--category',type=int)
+    parser.add_argument('--difficulty',type=str)
+    args = parser.parse_args()
+    
+    new_questions(vars(args)['type'],\
+                  vars(args)['difficulty'],\
+                  vars(args)['category'])
