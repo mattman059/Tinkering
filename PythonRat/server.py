@@ -1,9 +1,10 @@
 import socket
 from threading import Thread
+import server_func #customer HTTP Handler to squelch log messages
 
 def web_task(HOST,PORT):
     from http.server import HTTPServer, SimpleHTTPRequestHandler
-    http_socket = HTTPServer((HOST,PORT),SimpleHTTPRequestHandler)
+    http_socket = HTTPServer((HOST,PORT),server_func.CustomHandle)
     http_socket.serve_forever()
 
 def implant_task_socket(port):
@@ -30,19 +31,23 @@ def server_listen(HOST,PORT):
 
 
 def main():
-    threads = []
+    try:
+        threads = []
     
-    web_thread = Thread(target=web_task,args=('127.0.0.1',9090))
-    threads.append(web_thread)
-    web_thread.start()
+        web_thread = Thread(target=web_task,args=('127.0.0.1',9090))
+        threads.append(web_thread)
+        web_thread.start()
 
-    server_thread = Thread(target=server_listen,args=('0.0.0.0',12345))
-    threads.append(server_thread)
-    server_thread.start()
-
-    for t in threads:
-        t.join()
-
+        server_thread = Thread(target=server_listen,args=('127.0.0.1',12345))
+        threads.append(server_thread)
+        server_thread.start()
     
+        for t in threads:
+            t.join()
+            
+    except KeyboardInterrupt:
+        for t in threads:
+            t.join()
+      
 if __name__ == "__main__":
     main()
