@@ -6,15 +6,6 @@ def web_task(HOST,PORT):
     http_socket = HTTPServer((HOST,PORT),server_func.SimpleHTTPRequestHandler)
     http_socket.serve_forever()
 
-def implant_task_socket(port):
-    implant_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    HOST = "0.0.0.0"
-    PORT = port
-    implant_socket.bind((HOST,PORT))
-    implant_socket.listen()
-    while True:
-        client,client_addr = implant_socket.accept()
-
 def server_listen(HOST,PORT):
     SERVER = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     #HOST = "0.0.0.0"
