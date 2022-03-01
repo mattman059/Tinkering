@@ -1,21 +1,12 @@
 from client_class import *
 
 def main():
-    threads = []
-    tasking = Thread(target=tasking_thread)
-    tasking.daemon = True
-    threads.append(tasking)
-    tasking.start()
+    server_addr = '10.0.0.60'
+    server_port = 12345
+    c = Client('10.0.0.45',54321,server_addr,server_port)
 
-    comms = Thread(target=comms_thread)
-    comms.daemon = True
-    threads.append(comms)
-    comms.start()
 
-    for t in threads:
-        t.join()
-
-    
+   
 
 if __name__ == "__main__":
     main()
