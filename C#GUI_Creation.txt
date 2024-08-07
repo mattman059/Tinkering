@@ -1,0 +1,124 @@
+Creating a GUI in C# that meets these specifications involves using Windows Forms. Here's a step-by-step guide to create this application:
+
+Create a new Windows Forms Application project.
+Design the main form to be resizable.
+Split the form into top and bottom sections.
+Create a console-like output display on the top.
+Create a command input section on the bottom.
+Add tabs for multiple instances of the console and command input.
+Below is the C# code to achieve this:
+
+Step 1: Create a new Windows Forms Application
+Open Visual Studio and create a new Windows Forms Application project.
+
+Step 2: Design the Main Form
+Set the form properties:
+
+Set the FormBorderStyle to Sizable.
+Set the Size to a suitable default size (e.g., 800x600).
+Add a SplitContainer to the form:
+
+Set the Dock property of the SplitContainer to Fill.
+Set the Orientation property to Vertical.
+Add a TabControl to the bottom panel of the SplitContainer:
+
+Set the Dock property of the TabControl to Fill.
+Add four TabPages to the TabControl.
+
+Step 3: Design Each Tab Page
+Add a SplitContainer to each TabPage:
+
+Set the Dock property to Fill.
+Set the Orientation property to Horizontal.
+Add a TextBox to the top panel of the SplitContainer (for console output):
+
+Set the Multiline property to True.
+Set the ReadOnly property to True.
+Set the ScrollBars property to Vertical.
+Set the Dock property to Fill.
+Add a TextBox to the bottom panel of the SplitContainer (for command input):
+
+Set the Multiline property to False.
+Set the Dock property to Fill.
+Handle the KeyPress event to detect when the user presses Enter.
+Step 4: Write the Code
+In the code-behind file (Form1.cs), add the necessary code to handle the command execution and display the output.
+
+csharp
+Copy code
+using System;
+using System.Windows.Forms;
+
+namespace MultiTabConsoleApp
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+            InitializeConsoleTabs();
+        }
+
+        private void InitializeConsoleTabs()
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                var tabPage = new TabPage($"Console {i + 1}");
+                var splitContainer = new SplitContainer
+                {
+                    Dock = DockStyle.Fill,
+                    Orientation = Orientation.Horizontal
+                };
+
+                var outputTextBox = new TextBox
+                {
+                    Multiline = True,
+                    ReadOnly = True,
+                    ScrollBars = ScrollBars.Vertical,
+                    Dock = DockStyle.Fill
+                };
+
+                var inputTextBox = new TextBox
+                {
+                    Multiline = False,
+                    Dock = DockStyle.Fill
+                };
+                inputTextBox.KeyPress += (sender, e) => InputTextBox_KeyPress(sender, e, outputTextBox);
+
+                splitContainer.Panel1.Controls.Add(outputTextBox);
+                splitContainer.Panel2.Controls.Add(inputTextBox);
+
+                tabPage.Controls.Add(splitContainer);
+                tabControl1.TabPages.Add(tabPage);
+            }
+        }
+
+        private void InputTextBox_KeyPress(object sender, KeyPressEventArgs e, TextBox outputTextBox)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                e.Handled = true;
+                var inputTextBox = sender as TextBox;
+                string command = inputTextBox.Text;
+                inputTextBox.Clear();
+                ExecuteCommand(command, outputTextBox);
+            }
+        }
+
+        private void ExecuteCommand(string command, TextBox outputTextBox)
+        {
+            // Simulate command execution
+            outputTextBox.AppendText($"Command executed: {command}{Environment.NewLine}");
+        }
+    }
+}
+Step 5: Run the Application
+Build and run the application. You should see a resizable window with a split interface. The top part of each tab simulates a console output, and the bottom part allows command input. When a command is entered and the Enter key is pressed, the command is displayed in the console output area.
+
+This code provides a basic framework that you can extend to execute actual commands or perform other tasks as required.
+
+
+
+
+
+
